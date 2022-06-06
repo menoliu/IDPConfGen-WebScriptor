@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<!--
+Author: Zi Hao (Nemo) Liu, @menoliu
+Date modified: May 30, 2022
+-->
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=windows-1252">
+    <title>IDPConfGen Scriptor</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700"
+      rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+      integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+      crossorigin="anonymous">
+    <style>
+      html, body {
+      	min-height: 100%;
+        background-color:#33475b;
+      }
+      body, div, form, input, select { 
+     		padding: 0;
+      	margin: 0;
+      	outline: none;
+      	font-family: Roboto, Arial, sans-serif;
+      	font-size: 14px;
+      	color: #000;
+      	line-height: 22px;
+      }
+      h1, h4 {
+      	margin: 15px 0 4px;
+      	font-weight: 400;
+      }
+      h4 {
+      	margin: 20px 0 4px;
+      	font-weight: 400;
+      }
+      span {
+      	color: red;
+      }
+      .small {
+      	font-size: 10px;
+      	line-height: 18px;
+      }
+      .formbox {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: inherit;
+      padding: 10px 200px 0px;
+      }
+      form {
+      	width: 100%;
+      	padding: 50px;
+      	background: #fff;
+      	box-shadow: 0 2px 5px #000; 
+      }
+      input {
+      	width: calc(100% - 10px);
+      	padding: 5px;
+      	border: 1px solid #ccc;
+      	border-radius: 3px;
+      	vertical-align: middle;
+      }
+      input:hover, textarea:hover, select:hover {
+      	outline: none;
+      	border: 1px solid #095484;
+      	background: #e6eef7;
+      }
+      .title-block select, .title-block input {
+      	margin-bottom: 10px;
+      }
+      select {
+      	padding: 7px 0;
+      	border-radius: 3px;
+      	border: 1px solid #ccc;
+      	background: transparent;
+      }
+      select, table {
+      	width: 100%;
+      }
+      option {
+      	background: #fff;
+      }
+      .question-answer label {
+      	display: block;
+      	padding: 0 20px 10px 0;
+      }
+      .question-answer input {
+      	width: auto;
+      	margin-top: -2px;
+      }
+      th, td {
+      	width: 18%;
+      	padding: 15px 0;
+      	border-bottom: 1px solid #ccc;
+      	text-align: center;
+      	vertical-align: unset;
+      	line-height: 18px;
+      	font-weight: 400;
+      	word-break: break-all;
+      }
+      .first-col {
+      	width: 25%;
+      	text-align: left;
+      }
+      textarea {
+      	width: calc(100% - 6px);
+      }
+      .btn-block {
+      	margin-top: 20px;
+      	text-align: center;
+      }
+      button {
+      	width: 150px;
+      	padding: 10px;
+      	border: none;
+      	-webkit-border-radius: 5px; 
+      	-moz-border-radius: 5px; 
+      	border-radius: 5px; 
+      	background-color: #35478C;
+      	font-size: 16px;
+      	color: #fff;
+      	cursor: pointer;
+      }
+      button:hover {
+      	background-color: #4E7AC7;
+      }
+      button[class="dl"] {
+        background-color: #127017
+      }
+      button[class="dl"]:hover {
+        background-color: #1FBD28
+      }
+      input[type="checkbox"] {
+        width: 13px;
+  			height: 13px;
+  			padding: 0;
+  			margin:0;
+  			vertical-align: middle;
+  			position: relative;
+  			top: -1px;
+  			*overflow: hidden;
+      }
+      input[type="radio"] {
+        width: 13px;
+  			height: 13px;
+  			padding: 0;
+  			margin:0;
+  			vertical-align: middle;
+  			position: relative;
+  			top: -1px;
+  			*overflow: hidden;
+      }
+      label {
+      	display: block;
+  			padding-left: 15px;
+  			text-indent: -15px;
+      }
+      @media (min-width: 568px) {
+      .title-block {
+      	display: flex;
+      	justify-content: space-around;
+      }
+      .thirds{
+      	width: 30%;
+        margin-bottom: 0;
+      }
+      .box{
+        color: #000;
+        border-radius:10px;
+        padding: 20px;
+        display: none;
+        margin-top: 20px;
+        -moz-box-shadow:    inset 0 0 5px #000000;
+   			-webkit-box-shadow: inset 0 0 5px #000000;
+   			box-shadow:         inset 0 0 5px #000000;
+    	}
+      .livepreview{
+        color: #000;
+        border-radius:10px;
+        padding: 20px;
+        margin-top: 20px;
+        -moz-box-shadow:inset 0 0 5px #000000;
+   			-webkit-box-shadow:inset 0 0 5px #000000;
+   			box-shadow:inset 0 0 5px #000000;
+      	background:#fff6d0;
+        font-family:"Lucida Console", monospace;
+      }
+      th, td {
+      	word-break: keep-all;
+      }
+      }
+    </style>
+    <!--divs that hide and show depending on subclient selection-->
+    <!--reference https://www.tutorialrepublic.com/faq/show-hide-divs-based-on-dropdown-selection-in-jquery.php -->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script>
+      // jQuery functions to hide and show the div
+      $(document).ready(function () {
+        $("select").change(function () {
+          $(this).find("option:selected")
+            .each(function () {
+            var optionValue = $(this).attr("value");
+            if (optionValue) {
+              $(".box").not("." + optionValue).hide();
+              $("." + optionValue).show();
+            } else {
+              $(".box").hide();
+            }
+          });
+        }).change();
+      });
+    </script>
+    <!-- LOAD FILE SAVER -->
+    <!-- https://cdnjs.com/libraries/FileSaver.js -->
+    <!-- https://github.com/eligrey/FileSaver.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="idpcg_web_v01.js"></script>
+  </head>
+  <body>
+    <div class="formbox">
+      <form id="idpcg_form" action="/">
+        <h1>Bash Script Writer for IDPConformerGenerator v0.6.X</h1>
+        <br>
+        <h2>Philosophy and Usage:</h2>
+        <h4> The web-tool "IDPConfGen Scriptor" hopes to bridge the gap between
+          users whom are not comfortable with command-line-interface (CLI) only
+          programs. To maintain the speeds and flexibility that CLI programs
+          present while making things more user friendly, IDPConfGen Scriptor
+          presents all of the functionalities that <a href="https://github.com/julie-forman-kay-lab"
+            ,="" target="_blank">IDPConformerGenerator</a> presents in a GUI
+          format for ease of use. Please refer to the <a href="https://idpconformergenerator.readthedocs.io/"
+            ,="" target="_blank">documentation</a> for further usage details. <br>
+          <br>
+          To get started, please select a subclient below, then fill in the
+          required parameters. After you are satisfied, please click "Load Preview"
+          to see the code and "Download" when satisfied.
+          <br><br>
+          <span>NOTE:</span> clicking the dropdown menu will reset the form and preview.
+        </h4>
+        <div class="title-block">
+          <div class="thirds">
+        	  <h4>Select Subclient <span>*</span></h4>
+        		<select id="subclients" onfocus="formReset();">
+        		  <option value="">CLICK TO RESET</option>
+        		  <option value="build">build</option>
+        		  <option value="pdbdl">pdbdl</option>
+        		  <option value="fetch">fetch</option>
+        		  <option value="merge">merge</option>
+        	    <option value="fastaext">fastaext</option>
+        		  <option value="sscalc">sscalc</option>
+        	    <option value="dssppii">dssppii</option>
+        		  <option value="ssext">ssext</option>
+        		  <option value="torsions">torsions</option>
+        	    <option value="torsionsJ">torsionsJ</option>
+        		  <option value="bgeo">bgeo</option>
+        		  <option value="validate">validate</option>
+        		  <option value="csssconv">csssconv</option>
+        		  <option value="makecsss">makecsss</option>
+        		</select>
+        	</div>
+        </div>
+
+        <!--build subclient inputs-->
+        <div class="build box">
+          <h2>idpconfgen build \</h2>
+          <h4>Build from a database of torsion angles and secondary structure information.</h4>
+          <h4>Path to database <span>*</span></h4>
+          <input name="-db" type="text">
+          <h4>Protein sequence or path to FASTA file <span>*</span></h4>
+          <input name="-seq" type="text">
+          <h4>Amino Acid Substitutions</h4>
+          <input name="-subs" type="text">
+          <div class="title-block">
+            <div class="thirds">
+              <h4>Number of conformers</h4>
+              <input name="-nc" type="text"> </div>
+            <div>
+              <h3>Secondary structure filters:</h3>
+              <h4>Note: the default samples only for loops.</h4>
+              <label><input name="--dhelix" value=True type="checkbox"> dhelix</label> 
+              <label><input name="--dstrand" value=True type="checkbox"> dstrand</label>
+            </div>	
+            <div class="thirds">
+              <h4>Regex for duser</h4>
+              <input name="--duser" type="text">
+              <h4>Path to CSSS file</h4>
+              <input name="-csss" type="text"> </div>
+          </div>
+          <h3>Sidechain, Physical, and Energy Options</h3>
+          <div class="title-block">
+            <div class="thirds">
+              <h4>Sidechain options</h4>
+              <label><input name="-dsd" id="dsd" value=True type="checkbox" onclick="resetScm()"> Disable sidechains</label> 
+              <label><input name="-scm" id="mcsce" value="mcsce" type="radio" onclick="resetDsd()"> Use MC-SCE</label>
+              <label><input name="-scm" id="faspr" value="faspr" type="radio" onclick="resetDsd()"> Use FASPR</label> 
+              <h4>Backbone Energy Threshold (kJ)</h4>
+              <input name="-etbb" placeholder="10" type="text">
+              <h4>Sidechain Energy Threshold (kJ)</h4>
+              <input name="-etss" placeholder="1000" type="text">
+              <h4>Path to save energy log</h4>
+              <input name="-el" type="text">
+              <h4>Forcefield Parameters</h4>
+              <input name="-nc" placeholder="Amberff14SB" type="text">
+              <h4>Bond Geometry Database Path</h4>
+              <input name="-bgeo" placeholder="Internal library" type="text"> <label><input
+                  name="--bgeo-strategy" value="int2cart" type="checkbox"> Use Int2Cart for
+                bond geometries</label> </div>
+            <div class="thirds">
+              <h3>MC-SCE related parameters:</h3>
+              <h4>Mode</h4>
+              <label><input name="--mcsce-mode" value="simple" type="radio">
+                Simple</label> <label><input name="--mcsce-mode"
+                  value="exhaustive" type="radio"> Exhaustive</label>
+              <h4>Number of trials</h4>
+              <input name="--mcsce_ntrials" placeholder="10" type="text">
+              <h4>Batch size</h4>
+              <input name="--mcsce-batch_size" placeholder="16" type="text">
+              <h4>Temperature (K)</h4>
+              <input name="--mcsce-temperature" placeholder="300" type="text"> 
+            </div>
+          </div>
+        	<h3>Technical Specifications</h3>
+        	<div class="title-block">
+            <div class="thirds">
+              <h4>Number of CPU Cores</h4>
+              <input name="-n" placeholder="Max physical - 1" type="text">
+            </div>
+            <div class="thirds">
+              <h4>Random seed</h4>
+              <input name="-rs" placeholder="0" type="text">
+            </div>
+            <div class="thirds">
+              <h4>Path to custom fragment size probabilities</h4>
+              <input name="-xp" placeholder="1 1 3 3 2" type="text">
+            </div>
+        	</div>
+        	<h4>Path to output folder</h4>
+          <input name="-of" type="text">
+        </div>
+        
+        <!--pdbdl subclient inputs-->
+        <div class="pdbdl box">
+          <h2>idpconfgen pdbdl \</h2>
+          <h4>
+            Downloads structures from the RCSB databank for PDB formatted files of individual chains.
+          	<br><br>
+          	The PDB ID list can be given in the format of a file listing the PDBIDs
+						or as a list of arguments passed to the script call.
+						<br><br>
+						The following PDBID formats are allowed:
+						<br>
+						- XXXX<br>
+						- XXXXY<br>
+						- XXXX_Y<br>
+						<br>
+						Where, XXXX is the PDB ID code and Y the chain identifier. Y can have
+						more then one character, for example, XXXXAB, will select chain 'AB'
+						of PDB ID XXXX (for mmCIF cases); digits are also allowed. If no chainID
+						is provided, saves each chain of the PDB file separately.
+						<br><br>
+						Detailed procedures:<br>
+						* PDBs/mmCIFs are saved parsed in PDB format.<br>
+						* Known solvent and ligands are removed<br>
+						* Considers only altLoc 'A' or '&nbsp'.<br>
+						* Considers only elements composing aminoacids<br>
+						* selects only the first model for multi MODEL structures<br>
+						* renumbers atoms for saved chains<br>
+						* passes through pdb-tools `pdb_delinsert` filter.
+						<br><br>
+						Accepts TAR files as output destination.
+						<br><br>
+						DO NOT forget check "update destination folder" to perform the actual download.
+						Otherwise a simple comparison between source and destination is performed.
+          </h4>
+          <h4>Path to PDBID list <span>*</span></h4>
+          <input name="pos" type="text">
+          <label><input name="-cif" value=True type="checkbox"> Prioritizes PDBx/mmCIF formatted structures</label>
+          <h4>Path to destination folder where PDB files are stored</h4>
+          <input name="-d" type="text">
+          <label><input name="-u" value=True type="checkbox"> Update destination folder</label>
+          <h4>Chunks to process in RAM</h4>
+          <input name="-c" placeholder="3" type="text">
+          <h4>Number of CPU Cores</h4>
+          <input name="-n" placeholder="Max physical - 1" type="text">
+          
+        </div>
+        
+        <!--fetch subclient inputs-->
+        <div class="fetch box">
+          <h2>idpconfgen fetch \</h2>
+          <h4>
+            Downloads structures from RCSB Databank provided a list of PDB identifiers. 
+            The PDB ID list can be given in the format of a file listing the PDBIDs 
+            or as a list of arguments passed to the script call.
+          	<br><br>
+          	Structure files are saved to the local destination in its raw format,
+						that is, without any filtering or parsing.
+						<br><br>
+						The following PDBID formats are allowed:
+						<br>
+						- XXXX<br>
+						<br>
+						Where, XXXX is the PDB ID code.
+            <br><br>
+            By default, PDB structure files are prioritized. If you prefer to prioritize mmCIF files, check the box for `--mmcif`.
+          </h4>
+          <h4>Path to PDBID list <span>*</span></h4>
+          <input name="pos" type="text">
+          <label><input name="-cif" value=True type="checkbox"> Prioritize PDBx/mmCIF structures</label>
+          <div class="title-block">
+            <div class="thirds">
+              <h4>Path to destination folder where PDB files are stored</h4>
+              <input name="-d" type="text">
+              <label><input name="-u" value=True type="checkbox"> Update destination folder</label>
+            </div>
+            <div class="thirds">
+              <h4>Chunks to process in RAM</h4>
+              <input name="-c" type="text">
+              <h4>Number of CPU Cores</h4>
+              <input name="-n" placeholder="Max physical - 1" type="text">
+            </div>
+          </div>
+        </div>
+        
+        <!--merge subclient inputs-->
+        <div class="merge box">
+          <h2>idpconfgen merge \</h2>
+          <h4>
+            Collates and re-numbers conformers within subfolders of a given folder.
+          	<br><br>
+          	For example, if there are 5 subfolders filled with 100 conformers each,
+						copy and re-number them to make 500 conformers in the working dir. or
+						destination dir.
+          </h4>
+          <h4>Path to directory containing subfolders of conformers to merge <span>*</span></h4>
+          <input name="-tgt" type="text">
+          <div class="title-block">
+            <div class="thirds">
+              <h4>Path to destination folder to collate structures</h4>
+              <input name="-d" type="text">
+            </div>
+            <div class="thirds">
+              <h4>Prefix for file names</h4>
+              <input name="-pre" placeholder="conformer" type="text">
+              <label><input name="-del" value=True type="checkbox"> Delete conformers and subfolders after merging</label>    
+            </div>
+          </div>
+        </div>
+        
+        <!--sscalc subclient inputs-->
+        <div class="sscalc box">
+          <h2>idpconfgen sscalc \</h2>
+          <h4>
+            Extracts secondary structure information from PDBs.
+          	<br><br>
+          	Uses an external third party software (DSSP). Client has been
+            upgraded to DSSP-PPII according to:<br>
+            Mansiaux Y, Joseph AP, Gelly J-C, de Brevern AG (2011) Assignment of
+   					PolyProline II conformation and analysis od sequence-structure
+   					relationship. PLoS One 6(3): e18401. doi:10.1371/journal.pone.0018401
+          </h4>
+          <h4>Path to PDB files on the disk. TAR file acceptable <span>*</span></h4>
+          <input name="pos" type="text">
+          <h4>Path to the DSSP executable</h4>
+          <input name="-cmd" placeholder="dssp" type="text">
+          <div class="title-block">
+            <div class="thirds">
+              <h4>Output path for annotated secondary structure .JSON</h4>
+          		<input name="-o" placeholder="sscalc.json" type="text">
+              <label><input name="-rd" value=True type="checkbox"> Reduce DSSP nomenclature to L, H, E</label>
+              <label><input name="--plot" value=True type="checkbox"> Plot DSSP fractional secondary structure</label>
+            </div>
+            <div class="thirds">
+              <h4>Destination path for split PDB storage</h4>
+          		<input name="-d" type="text">
+              <label><input name="-u" value=True type="checkbox"> Update destination folder</label>
+            </div>
+            <div class="thirds">
+              <h4>Minimum size accepted for fragment/segment</h4>
+          		<input name="-m" placeholder="3" type="text">
+              <h4>Chunks to process in RAM</h4>
+          		<input name="-c" type="text">
+              <h4>Number of CPU Cores</h4>
+          		<input name="-n" placeholder="Max physical - 1" type="text">
+            </div>
+          </div>
+          
+        </div>
+
+        <!--dssppii subclient inputs-->
+        <div class="dssppii box">
+          <h2>idpconfgen dssppii \</h2>
+          <h4>
+            Adds polyproline type-2 helix assignment to DSSP.
+          	<br><br>
+          	Mainly an extension if running DSSP v2-v3.
+          </h4>
+          <h4>Path to PDB file to operate on <span>*</span></h4>
+          <input name="-pdb" type="text">
+          <div class="title-block">
+            <div class="thirds">
+              <h4>Path to the DSSP executable</h4>
+          		<input name="-cmd" placeholder="dssp" type="text">
+            </div>
+            <div class="thirds">
+              <h4>Path to output file</h4>
+              <input name="-o" type="text">
+              <label><input name="-horiz" value=True type="checkbox"> Give DSSP-PPII output in 1D sequence fashion</label>
+              <h4>Number of CPU Cores</h4>
+          		<input name="-n" placeholder="Max physical - 1" type="text">
+            </div>
+          </div>
+          
+        </div>
+        
+        <!--ssext subclient inputs-->
+        <div class="ssext box">
+          <h2>idpconfgen ssext \</h2>
+          <h4>
+            Extract secondary structure protein segments from PDBs.
+          	<br><br>
+          	Requires a *.JSON file as generated by `idpconfgen sscalc`.
+          </h4>
+          <h4>Path to PDB files on the disk. TAR file acceptable <span>*</span></h4>
+          <input name="pos" type="text">
+          <h4>Path to the *.JSON file generated by `sscalc` <span>*</span></h4>
+          <input name="pos" placeholder=".dssp" type="text">
+          <div class="title-block">
+            <div class="thirds">
+              <h4>Destination folder where PDB files will be stored</h4>
+          		<input name="-d" type="text">
+              <h4>Secondary structure type to extract</h4>
+          		<input name="-s" placeholder="all" type="text">
+            </div>
+            <div class="thirds">
+              <h4>List of atom names to save</h4>
+              <input name="-a" placeholder="['N', 'CA', 'C']" type="text">
+              <h4>Minimum size accepted for fragment/segment</h4>
+          		<input name="-m" placeholder="3" type="text">
+              <h4>Number of CPU Cores</h4>
+          		<input name="-n" placeholder="Max physical - 1" type="text">
+            </div>
+          </div>
+          
+        </div>
+        
+        <!--torsions subclient inputs-->
+        <div class="torsions box">
+          <h2>idpconfgen torsions \</h2>
+          <h4>
+            Extracts backbone torsion angles (in radians by default) from PDBs.
+          	<br><br>
+          	PROTOCOL:<br>
+						1. Reads backbone coordinates (N, CA, C) from PDB/mmCIF files.<br>
+						2. Calculates torsion angles from the backbone.<br>
+						3. Saves results to a JSON dictionary where keys are the input file
+						    names and the value is a dictionary containing three lists: 'OMEGA',
+						    'PHI', and 'PSI'.<br>
+						4. If `source` JSON file is given, updates that file with the new
+						    information. Preexisting keys are deleted.<br><br>
+						
+						For each PDB/mmCIF analyzed, fails if:<br>
+						1. The number of N, CA, and C atoms differ.<br>
+						2. There are unexpected inconsistencies in the PDB/mmCIF files.<br>
+						3. Any of the consecutive atoms are more than 2.1A apart.<br>
+          </h4>
+          <h4>Path to PDB files on the disk. TAR file acceptable <span>*</span></h4>
+          <input name="pos" type="text">
+          <div class="title-block">
+            <div class="thirds">
+              <h4>Updates a source file with new output</h4>
+          		<input name="-sc" type="text">
+              <label><input name="-deg" value=True type="checkbox"> Process angles in degrees</label>
+              <label><input name="--plot" value=True type="checkbox"> Plot the Phi torsion angle distribution and fractional Ramachandran populations</label>
+              <h4>
+                Note: for extended plotting options, please refer to the CLI.
+              </h4>
+            </div>
+            <div class="thirds">
+              <h4>Output file path</h4>
+          		<input name="-o" type="text">
+              <h4>Number of CPU Cores</h4>
+          		<input name="-n" placeholder="Max physical - 1" type="text">
+            </div>     
+          </div>
+        </div>
+        
+        <!--torsionsJ subclient inputs-->
+        <div class="torsionsJ box">
+          <h2>idpconfgen torsionsJ \</h2>
+          <h4>
+            Calculates J-torsion angles from PDB/mmCIF files.
+          	<br><br>
+          	Calculate torsion angles between the HN-CaHA atoms, where H is the first
+						atom and HA the last atom and angles are given by the right-hand rule
+						where the thumb points from N to CA. If the resulting angle exceeds 180
+						degrees, the corresponding value in negative angles is given instead.
+						<br><br>
+						The calculated angles will be stored in a JSON file in the folder where the
+						CLI was executed, named 'torsionsJ_HN-CaHA.json', and with one entry per
+						structure. Structures are allowed to have unsorted atoms as long as residues are
+						ordered.
+						<br><br>
+						If input structures lack protons at the N-terminal, the flag `--no_hn_term`
+						should be given. In this case, the first calculated torsion angle
+						corresponds to the second residue. In the case there are N-terminal nitrogen has protons, the dihedral angle
+						between these and the `HA` atom for the first residue will also be
+						calculated. It is up to the user to decide whether or not this first angle
+						has physical meaning. In the resulting torsion angle lists, NaN values will be placed at proline
+						sites. Different values can be given with the option --proline_value.
+          </h4>
+          <h4>Path to PDB files on the disk. TAR file acceptable <span>*</span></h4>
+          <input name="pos" type="text">
+          <div class="title-block">
+            <div class="thirds">
+              <h4>Proline value</h4>
+          		<input name="--proline_value" placeholder="np.nan" type="text">
+              <label><input name="-deg" value=True type="checkbox"> Process angles in degrees</label>
+              <label><input name="--no_hn_term" value=True type="checkbox"> No H/H1 N-term</label>
+              <h4>
+                Note: enabling "No H/H1 N-term" considers N-terminal to have `H` or `H1` labels.
+              </h4>
+              <h4>HN Labels</h4>
+          		<input name="--hn_labels" placeholder="H H1" type="text">
+            </div>
+            <div class="thirds">
+              <h4>Decimals size</h4>
+          		<input name="-dec" placeholder="5" type="text">
+              <h4>Number of CPU Cores</h4>
+          		<input name="-n" placeholder="Max physical - 1" type="text">
+            </div>     
+          </div>
+        </div>
+        
+        <!--bgeo subclient inputs-->
+        <div class="bgeo box">
+          <h2>idpconfgen bgeo \</h2>
+          <h4>
+            Create a database of covalent bond geometries for the backbone.
+          	<br><br>
+          	Given a PDB file:
+						<br>
+						1) reads each of its trimers, and for the middle residue:<br>
+						2) Calculates phi/psi and rounds them to the closest 10 degree bin<br>
+						3) assigns the planar angles found for that residue to the trimer/torsion key.<br>
+						4) updates that information in dictionary (library)<br><br>
+						
+						You can provide a folder with several PDB/mmCIF files.
+          </h4>
+          <h4>Path to a folder of PDB files on the disk <span>*</span></h4>
+          <input name="pos" type="text">
+          <label><input name="-c" value=True type="checkbox"> Convert bond geometry DB to bond type hierarchy</label>
+        </div>
+        
+        <!--fastaext subclient inputs-->
+        <div class="fastaext box">
+          <h2>idpconfgen fastaext \</h2>
+          <h4>
+            Extracts FASTA information from PDBs.
+          </h4>
+          <h4>Path to PDB files on the disk. TAR file acceptable <span>*</span></h4>
+          <input name="pos" type="text">
+          <div class="thirds">
+            <h4>Path to the output file</h4>
+          	<input name="-o" placeholder="Prints to console" type="text">
+            <h4>Number of CPU Cores</h4>
+          	<input name="-n" placeholder="Max physical - 1" type="text">
+          </div>
+        </div>
+        
+        <!--validate subclient inputs-->
+        <div class="validate box">
+          <h2>idpconfgen validate \</h2>
+          <h4>
+            Conformer validator.<br><br>
+            <span>NOTE: THIS CLIENT IS CURRENTLY UNDER CONSTRUCTION</span>
+          </h4>
+          <h4>Path to PDB files on the disk. TAR file acceptable <span>*</span></h4>
+          <input name="pos" type="text">
+          <div class="title-block">
+            <div class="thirds">
+            	<h4>Atoms to consider</h4>
+          		<input name="-atm" placeholder="{'N', 'S', 'C', 'P', 'O'}" type="text">
+            	<h4>Elements to consider</h4>
+          		<input name="-ele" placeholder="{'N', 'S', 'C', 'P', 'O'}" type="text">
+            	<h4>VDW Radii Set</h4>
+          		<input name="-vdw" placeholder="{'tsai1999', 'bondi1964'}" type="text">
+            	<label><input name="-vo" value=True type="checkbox"> VDW overlap in all atoms</label>
+          	</div>
+          	<div class="thirds">
+            	<h4>Residues apart</h4>
+          		<input name="-ra" placeholder="2" type="text">
+            	<h4>Bond tolerance</h4>
+          		<input name="-bt" placeholder="0.01" type="text">
+          	</div>
+          	<div class="thirds">
+            	<h4>Validations</h4>
+          		<input name="-v" placeholder="('vdw2', 'vdw', 'bbl', 'bbd')" type="text">
+            	<h4>Number of CPU Cores</h4>
+          		<input name="-n" placeholder="Max physical - 1" type="text">
+          	</div>
+          </div>
+        </div>
+        
+        <!--csssconv subclient inputs-->
+        <div class="csssconv box">
+          <h2>idpconfgen csssconv \</h2>
+          <h4>
+            Ability to parse probabilistic secondary-structure predictions based on user preference.<br><br>
+            
+            The output will be printed to the terminal window. To save the output to
+						a file use the `>` command. Note that output <span>MUST</span> have the extension .JSON.
+          </h4>
+          <h4>Path to CheSPI probs8 file to operate on</h4>
+          <input name="-p8" type="text">
+          <h4>Path to delta2D output file to operate on</h4>
+          <input name="-d2d" type="text">
+          <h4>Path to output CSSS.JSON file</h4>
+          <input name="-o" type="text">
+          <label><input name="-f" value="True" type="checkbox"> Parses SSP without grouping DSSP codes</label>
+        </div>
+        
+        <!--makecsss subclient inputs-->
+        <div class="makecsss box">
+          <h2>idpconfgen makecsss \</h2>
+          <h4>
+            Generates a CSSS.JSON file based on user specifications for secondary structure sampling on a per residue basis.<br><br>
+            
+            Has the ability to edit previously generated CSSS files as well with `--file-csss`.
+						The output will be printed to the terminal window. To save the output to
+						a file use the `>` or `--output` command. Note that output <span>MUST</span> have the extension .JSON.
+          </h4>
+          <h4>Path to existing CSSS file</h4>
+          <input name="-fc" type="text">
+          <h4>Custom secondary structure probabilities</h4>
+          <input name="-cp" placeholder="e.g. 12-45 L+ 0.9" type="text">
+          <h4>Path to output .JSON file</h4>
+          <input name="-o" type="text">
+        </div>
+        	
+        <h3>Preview:</h3>
+        <div id="preview" class="livepreview">
+          #!/bin/bash<br>
+          <br>
+          idpconfgen -h \ 
+        </div>
+        <h4>
+          To run this function, either download and `bash` the script in your terminal or copy-and-paste the preview into your terminal.<br>
+          You <span>**MUST**</span> have the `idpconfgen` environment activated while running these functions.
+          <br><br>
+          <span>NOTE:</span> Because you will be downloading an executable bash script, your browser may warn you about file safety.
+          If you are not comfortable, feel free to "Load Preview" and copy the contents of the preview window into a `.sh` file.
+        </h4>
+        <div class="btn-block"> <button type="button" onclick="loadPreview();">Load Preview</button></div>
+        <div class="btn-block"> <button class="dl" type="button" onclick="downloadScript();">Download</button></div>
+      </form>
+    </div>
+  </body>
+</html>
